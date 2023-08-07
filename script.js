@@ -1,50 +1,22 @@
-//your JS code here. If required.
-const player1Input = document.getElementById('player-1');
-const player2Input = document.getElementById('player-2');
-const submitButton = document.getElementById('submit');
-const messageDiv = document.querySelector('.message');
-const boardCells = document.querySelectorAll('.cell');
+() => {
+  cy.visit(baseUrl + "/main.html");
 
-let currentPlayer = 'X'; // 'X' represents player 1, 'O' represents player 2
+  // Wait for the elements to become visible before interacting with them
+  cy.get('#player1').should('be.visible').wait(1000);
+  cy.get('#player1').type('Player1');
 
-submitButton.addEventListener('click', startGame);
+  cy.get('#player2').should('be.visible').wait(1000);
+  cy.get('#player2').type('Player2');
 
-function startGame() {
-  const player1Name = player1Input.value;
-  const player2Name = player2Input.value;
+  cy.get('#submit').click();
 
-  if (player1Name.trim() === '' || player2Name.trim() === '') {
-    alert('Please enter both player names.');
-    return;
-  }
+  cy.get('.message').should('contain', "Player1, you're up");
 
-  messageDiv.textContent = `${player1Name}, you're up!`;
-  boardCells.forEach(cell => cell.addEventListener('click', handleCellClick));
+  cy.get('#1').click();
+  cy.get('#1').should('contain', 'x');
 
-  submitButton.disabled = true;
-  player1Input.disabled = true;
-  player2Input.disabled = true;
-}
+  cy.get('.message').should('contain', "Player2, you're up");
 
-function handleCellClick(event) {
-  const cell = event.target;
-
-  if (cell.textContent === '') {
-    cell.textContent = currentPlayer;
-    checkWin();
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-    updateMessage();
-  }
-}
-
-function checkWin() {
-  // You need to implement the logic to check for a win here
-  // and show the message with the winner's name.
-}
-
-function updateMessage() {
-  const player1Name = player1Input.value;
-  const player2Name = player2Input.value;
-  const message = currentPlayer === 'X' ? `${player1Name}, you're up!` : `${player2Name}, you're up!`;
-  messageDiv.textContent = message;
+  cy.get('#4').click();
+  cy.get('#4').should('contain', 'o');
 }
